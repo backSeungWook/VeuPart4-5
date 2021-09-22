@@ -1,28 +1,25 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app>
+   <v-container>
+     <!-- 검색바 -->
+     <search-bar />
+
+     <!--영화목록 -->
+     <movie-list />
+   </v-container>
+
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+//@:절대경로 VUE CLI에 이미 지정되어있음
+import SearchBar from '@/components/SearchBar'
+import MovieList from '@/components/MovieList'
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+ components:{
+   SearchBar,
+   MovieList
+ }
 }
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
