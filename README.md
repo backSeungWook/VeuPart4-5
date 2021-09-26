@@ -152,6 +152,9 @@ $ firebase deploy
 <br><br>
 
 # Part5. Jest , Vue Test Utils
+처음부터 CLI로 설치 시  
+Unit Testing > EsLint +Standard config > Lint on save 해제 > Jest > In dedicated config files
+https://heropy.blog/2020/05/20/vue-test-with-jest/  
 단위(Unit) 테스트란 상태, 메소드, 컴포넌트 등의 정의된 프로그램 최소 단위들이 독립적으로 정상 동작하는지 확인하는 것  
 CLI에서 Jest를 직접 실행하기 위해 전역 설치
 ```
@@ -225,4 +228,88 @@ package.json 파일에 eslintConfig에 다음과 같이 Jest 옵션을 추가.
     }
   }
 }
+```
+## Vue Test Utils API
+
+https://vue-test-utils.vuejs.org/api/  
+mount() : 자식 컴포넌트 까지 랜더링 하여  마운팅  
+shallowMount() : 얇게 마운팅 하기 때문에 하위 컴포넌트가 가짜로 랜더링 되어서 마운팅 됨.  
+일반적인 단위 테스트에서는 shallowMount를 사용을 권장  
+createLocalVue() :  
+
+### wrapper
+ - emitted : emit에 대한 설정
+    ```js
+      wrapper.vm.$emit('foo')
+      wrapper.vm.$emit('foo', 123)
+      
+      // assert event has been emitted
+      expect(wrapper.emitted().foo).toBeTruthy()
+      // assert event count
+      expect(wrapper.emitted().foo.length).toBe(2)\
+      // assert event payload
+      expect(wrapper.emitted().foo[1]).toEqual([123])
+    ```
+ - attributes : 해당 DOM 에 관련된 속성
+    ```js
+    expect(wrapper.attributes('id')).toBe('foo')
+    ```
+ - exists: 있으면 true를 반환하고 없으면 false를 반환
+ - findComponent: find 메소드
+ - findAllComponent: findAll 메소드
+ - html: html 구조 반환
+ - setData:data에 값을 할당  
+
+### Mocking
+jest.mock : 모의(가짜) 모듈를 만들 때
+jest.fn: 모의(가짜) 함수 만들 때  
+  - https://jestjs.io/docs/mock-function-api#mockfngetmockname
+
+```js
+import { shallowMount } from '@vue/test-utils'
+import TodoTitle from '../TodoTitle'
+import axios from 'axios'
+
+//가짜 모듈로 만들기
+jest.mock('axios')
+
+describe('TodoTitle C',()=>{
+   //가짜 함수 jext.fn()
+   let wrapper
+  beforeEach(()=>{
+    const resData = {
+      data:{
+        title:"delectus aut autem"
+      }
+    }
+    /*axios.get = jest.fn(()=>{
+      return new Promise(resolve =>{
+        resolve(resData)
+      })
+    }) 아래 코드랑 동일*/
+    //axios.get = jest.fn().mockResolvedValue(resData)
+    //위에는 axios를 가짜 모듈로 안만들고 가짜 함수로만 했을 때
+
+    //axios 가짜 모듈로 만들었을 때
+    axios.get.mockResolvedValue(resData)
+
+    wrapper = shallowMount(TodoTitle)
+  })
+  
+  test('가져온 텍스트를 랜더링',()=>{
+      expect(wrapper.text()).toBe('delectus aut autem')  
+  })
+
+  test('호출여부',()=>{
+    //toHaveBeenCalled 호출 여부 
+    expect(axios.get).toHaveBeenCalled()
+    //toHaveBeenCalledTimes()몇번 호출 되었는지 
+    expect(axios.get).toHaveBeenCalledTimes(2)
+
+    //실제 함수 실행 여부도 spyOn()으로 확인 가능
+    const spy = jest.spyOn(wrapper.vm,'fetchTodo')
+    wrapper.vm.fetchTodo()
+    expect(spy).toHaveBeenCalled()
+  })
+})
 ```
