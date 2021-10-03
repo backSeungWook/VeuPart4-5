@@ -1,11 +1,13 @@
 import axios from 'axios'
 
+
 export default{
   namespaced: true,
   state:() => ({
     title:'',
     loading:false,
-    movies:[]
+    movies:[],
+    error:null
   }),
   getters:{},
   mutations:{
@@ -21,32 +23,45 @@ export default{
   },
   actions:{
     fetchMovies({state,commit},pageNum){
-      const promise =  new Promise(resolve  => {
+      const  promise =  new Promise((resolve)  => {
+      
         const res = axios.get(`https://www.omdbapi.com/?apikey=7ea4c57&s=${state.title}&page=${pageNum}`)
+        //reject('Error Mesg')
         resolve(res)
+        
       })
-      return promise.then(res => {
+      return promise.then((res) => {
         commit('pushIntoMovies',res.data.Search)
         return res.data
       })
+      /*.catch((error) =>{
+        alert(error)
+        return error
+      })*/
     },
     async searchMovies({commit,dispatch}){
       //get(url)      
       commit('updateState',{
         loading:true,
-        movies:[]
+        movies:[],
+        error:null
       })
  
-      const { totalResults } = await dispatch('fetchMovies',1)
-      const pageLength = Math.ceil(totalResults / 10 )//ceil 올림수 
-
-      if(pageLength > 1){
-        for(let i = 2;i <=pageLength;i+=1){
-          if(i>4){//최대 4 페이지 까지
-            break;
+      try{
+        const { totalResults } = await dispatch('fetchMovies',1)
+        const pageLength = Math.ceil(totalResults / 10 )//ceil 올림수 
+  
+        if(pageLength > 1){
+          for(let i = 2;i <=pageLength;i+=1){
+            if(i>4){//최대 4 페이지 까지
+              console.log('i == ')
+              break;
+            }
+            await dispatch('fetchMovies',i)
           }
-          await dispatch('fetchMovies',i)
         }
+      }catch(error){
+        commit('updateState',{error})
       }
       
       commit('updateState',{
