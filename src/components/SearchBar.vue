@@ -33,6 +33,7 @@ export default {
   computed:{
     title:{//양반향 바인딩 시 getter,setter방식으로
       get(){
+        
         return this.$store.state.movie.title
       },
       set(title){
