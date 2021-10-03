@@ -107,7 +107,7 @@ a1()
 //es8 async
 async function asyncF(){
   try{
-    const res = await a1()//resolve
+    const res = await a1()//resolve Promise 를 반환
   }catch(error){
     alert(error)
   }finally{
