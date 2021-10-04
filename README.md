@@ -313,3 +313,37 @@ describe('TodoTitle C',()=>{
   })
 })
 ```
+
+# cypress
+https://www.cypress.io/   
+https://docs.cypress.io/api/table-of-contents  
+화면이 의도대로 구현이 되어있는지 확인 테스트
+```
+npm i -D cypress eslint-plugin-cypress
+```
+```js
+//package.json add
+"scripts": {
+  //.....
+  "test:e2e":"cypress open"
+}
+```
+```js
+//테스트 기본 구조
+describe('',() =>{
+  it('',()=>{
+    
+  })
+})
+```
+```js
+//cypress.json
+{  
+  //기본 테스트할 주소
+  "baseUrl":"http://localhost:8080",
+  //테스트 브라우저의 높이 넓이 지정
+  "viewportWidth":1400,
+  "viewportHeight":800
+}
+
+```

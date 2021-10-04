@@ -38,7 +38,7 @@ export default {
     errorMessage:{
       get(){
         const error = this.$store.state.movie.error
-        console.log(error)
+
         if(error){
           return error
         }

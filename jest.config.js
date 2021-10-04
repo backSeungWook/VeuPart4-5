@@ -18,7 +18,8 @@ module.exports = {
   modulePathIgnorePatterns: [
     '<rootDir>/node_modules',
     '<rootDir>/build',
-    '<rootDir>/dist'
+    '<rootDir>/dist',
+    '<rootDir>/cypress'//cypress 경로는 참조하지 않음
   ],
   // 정규식과 일치하는 파일의 변환 모듈을 지정합니다.
   transform: {
